@@ -1,6 +1,8 @@
 import React from 'react';
-import {useSelector} from 'react-redux';
 import {Button, Image, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {useSelector, useDispatch} from 'react-redux';
+import {addToCart} from '../../features/cart/cartSlice';
+
 import {
   selectAllProducts,
   selectProduct,
@@ -9,19 +11,22 @@ import colors from '../../constants/colors';
 
 const ProductDetailsScreen = ({route}) => {
   const {id} = route.params;
+  const dispatch = useDispatch();
 
   const product = useSelector(selectAllProducts).find(
     product => product.id === id,
   );
 
-  console.log(product);
+  const handleAddToCart = () => {
+    dispatch(addToCart(product));
+  };
 
   return (
     <ScrollView>
       <Image source={{uri: product.imageUrl}} style={styles.image} />
       <View style={styles.actions}>
         <Button
-          onPress={() => console.log('hello')}
+          onPress={handleAddToCart}
           title="ADD TO CART"
           color={colors.primary}
         />
