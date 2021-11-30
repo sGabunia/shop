@@ -93,7 +93,7 @@ const PRODUCTS = [
   {
     id: 'p5',
     ownerId: 'u3',
-    title: 'The Book - Limited Edition',
+    title: 'The Book',
     imageUrl:
       'https://images.pexels.com/photos/46274/pexels-photo-46274.jpeg?cs=srgb&dl=blur-blurred-book-pages-46274.jpg&fm=jpg',
     description:

@@ -52,10 +52,22 @@ const cartSlice = createSlice({
       state.totalAmount -= state.items[action.payload].price;
       delete state.items[action.payload];
     },
+    clearCart: state => {
+      state.items = {};
+      state.totalAmount = 0;
+    },
+    deleteProductInCart: (state, action) => {
+      if (!state.items[action.payload]) {
+        return;
+      }
+      state.totalAmount -= state.items[action.payload].sum;
+      delete state.items[action.payload];
+    },
   },
 });
 
-export const {addToCart, removeFromCart} = cartSlice.actions;
+export const {addToCart, removeFromCart, clearCart, deleteProductInCart} =
+  cartSlice.actions;
 
 export const selectCart = ({cart}) => cart;
 

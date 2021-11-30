@@ -1,10 +1,18 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View, FlatList} from 'react-native';
+import {useSelector} from 'react-redux';
+import OrderItem from '../../components/shop/OrderItem';
+import {selectOrders} from '../../features/cart/ordersSlice';
 
 const OrdersScreen = () => {
+  const orders = useSelector(selectOrders);
+
+  const renderItem = ({item}) => {
+    return <OrderItem order={item} orders={orders} />;
+  };
   return (
     <View>
-      <Text>orders</Text>
+      <FlatList data={orders} renderItem={renderItem} />
     </View>
   );
 };

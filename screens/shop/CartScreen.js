@@ -1,12 +1,15 @@
 import React from 'react';
 import {Button, FlatList, StyleSheet, Text, View} from 'react-native';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 
-import {selectCart} from '../../features/cart/cartSlice';
+import {clearCart, selectCart} from '../../features/cart/cartSlice';
+import {addOrder} from '../../features/cart/ordersSlice';
+
 import colors from '../../constants/colors';
 import CardItem from '../../components/shop/CardItem';
 
 const CartScreen = () => {
+  const dispatch = useDispatch();
   const {items, totalAmount} = useSelector(selectCart);
 
   const itemsArray = Object.entries(items);
@@ -15,6 +18,11 @@ const CartScreen = () => {
     const [key, product] = item;
 
     return <CardItem product={product} productKey={key} />;
+  };
+
+  const makeOrder = () => {
+    dispatch(addOrder(itemsArray, totalAmount));
+    dispatch(clearCart());
   };
 
   return (
@@ -27,6 +35,7 @@ const CartScreen = () => {
         <Button
           title="Order Now"
           color={colors.accent}
+          onPress={makeOrder}
           disabled={itemsArray.length === 0}
         />
       </View>

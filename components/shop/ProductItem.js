@@ -1,39 +1,32 @@
 import React from 'react';
-import {useNavigation} from '@react-navigation/native';
-import {useDispatch} from 'react-redux';
-import {addToCart} from '../../features/cart/cartSlice';
 
 import {StyleSheet, Text, View, Image, Button, Pressable} from 'react-native';
 import colors from '../../constants/colors';
 
-const ProductItem = ({product}) => {
-  const navigation = useNavigation();
-  const dispatch = useDispatch();
-
-  const showProductDetails = () => {
-    navigation.navigate('Product Details', {
-      title: product.title,
-      id: product.id,
-    });
-  };
-
-  const showCart = () => {
-    dispatch(addToCart(product));
-  };
-
+const ProductItem = ({
+  product,
+  leftButtonTitle = 'View Details',
+  rightButtonTitle = 'To Cart',
+  handleLeftClick,
+  handleRightClick,
+}) => {
   return (
-    <Pressable onPress={showProductDetails}>
+    <Pressable onPress={handleLeftClick}>
       <View style={styles.product}>
         <Image source={{uri: product.imageUrl}} style={styles.image} />
         <Text style={styles.title}>{product.title}</Text>
         <Text style={styles.price}>${product.price.toFixed(2)}</Text>
         <View style={styles.actions}>
           <Button
-            title="View Details"
-            onPress={showProductDetails}
+            title={leftButtonTitle}
+            onPress={handleLeftClick}
             color={colors.accent}
           />
-          <Button title="To Cart" color={colors.accent} onPress={showCart} />
+          <Button
+            title={rightButtonTitle}
+            onPress={handleRightClick}
+            color={colors.accent}
+          />
         </View>
       </View>
     </Pressable>

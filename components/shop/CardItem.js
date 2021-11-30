@@ -7,7 +7,6 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const CardItem = ({product, productKey}) => {
   const dispatch = useDispatch();
-  console.log(product);
 
   const handleRemoveFromCart = () => {
     dispatch(removeFromCart(productKey));
@@ -20,12 +19,14 @@ const CardItem = ({product, productKey}) => {
         <Text style={styles.mainText}>{product.product}</Text>
       </Text>
       <View style={styles.itemData}>
-        <Text style={styles.mainText}>{product.sum.toFixed(2)}</Text>
-        <TouchableOpacity
-          style={styles.deleteButton}
-          onPress={handleRemoveFromCart}>
-          <MaterialIcons name="remove-shopping-cart" size={16} />
-        </TouchableOpacity>
+        <Text style={styles.mainText}>$ {product.sum.toFixed(2)}</Text>
+        {productKey && (
+          <TouchableOpacity
+            style={styles.deleteButton}
+            onPress={handleRemoveFromCart}>
+            <MaterialIcons name="remove-shopping-cart" size={16} />
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
