@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, FlatList} from 'react-native';
+import {StyleSheet, View, FlatList, Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector, useDispatch} from 'react-redux';
 import {
@@ -16,8 +16,19 @@ const UserProductsScreen = () => {
   const navigation = useNavigation();
 
   const handleDelete = id => {
-    dispatch(deleteProduct(id));
-    dispatch(deleteProductInCart(id));
+    Alert.alert('Detele product', 'Do you wish to delete this product?', [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {
+        text: 'Delete',
+        onPress: () => {
+          dispatch(deleteProduct(id));
+          dispatch(deleteProductInCart(id));
+        },
+      },
+    ]);
   };
 
   const handleEditProduct = id => {

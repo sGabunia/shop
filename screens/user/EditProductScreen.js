@@ -1,21 +1,54 @@
-import React, {useState} from 'react';
+import React, {useState, useLayoutEffect, useCallback} from 'react';
 import {StyleSheet, Text, View, ScrollView, TextInput} from 'react-native';
-import {useSelector} from 'react-redux';
-import {selectAllProducts} from '../../features/products/productsSlice';
+import {useSelector, useDispatch} from 'react-redux';
+import {
+  addProduct,
+  selectAllProducts,
+  updateProduct,
+} from '../../features/products/productsSlice';
 
-const EditProductScreen = ({route}) => {
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+
+const EditProductScreen = ({route, navigation}) => {
+  const dispatch = useDispatch();
   const product = useSelector(selectAllProducts).find(
     prod => prod.id === route?.params?.id,
   );
 
-  const [title, setTitle] = useState(product ? product.title : '');
-  const [imageUrl, setImageUrl] = useState(product ? product.imageUrl : '');
-  const [price, setPrice] = useState(product ? product.price.toString() : '');
-  const [description, setDescription] = useState(
-    product ? product.description : '',
+  const [title, setTitle] = useState(product?.title || '');
+  const [imageUrl, setImageUrl] = useState(
+    product?.imageUrl ||
+      'https://cdn.pixabay.com/photo/2015/10/03/02/14/pen-969298_1280.jpg',
+  );
+  const [price, setPrice] = useState(product?.price.toString() || '');
+  const [description, setDescription] = useState(product?.description || '');
+
+  const handleDataSave = useCallback(
+    (title, imageUrl, price, description) => {
+      if (product) {
+        dispatch(
+          updateProduct({id: product.id, title, imageUrl, price, description}),
+        );
+      } else {
+        dispatch(addProduct(title, imageUrl, price, description));
+      }
+
+      navigation.goBack();
+    },
+    [dispatch, title, imageUrl, price, description],
   );
 
-  console.log(price, description);
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <MaterialIcons
+          name="check"
+          size={24}
+          onPress={() => handleDataSave(title, imageUrl, price, description)}
+        />
+      ),
+    });
+  }, [navigation, title, imageUrl, price, description]);
 
   return (
     <ScrollView>
@@ -40,6 +73,7 @@ const EditProductScreen = ({route}) => {
           <Text style={styles.label}>Price</Text>
           <TextInput
             style={styles.input}
+            keyboardType="number-pad"
             value={price}
             onChangeText={text => setPrice(text)}
           />

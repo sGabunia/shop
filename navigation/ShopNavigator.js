@@ -25,14 +25,18 @@ const Drawer = createDrawerNavigator();
 const ShopStackNavigator = () => {
   return (
     <Stack.Navigator
-      screenOptions={{headerTitleStyle: {fontFamily: 'OpenSans-Bold'}}}>
+      screenOptions={{
+        headerTitleStyle: {
+          fontFamily: 'OpenSans-Bold',
+        },
+        headerStyle: {backgroundColor: colors.accent},
+        headerTitleAlign: 'center',
+      }}>
       <Stack.Screen
         name="Products"
         component={ProductsOverviewScreen}
         options={{
           title: 'All Products',
-          headerStyle: {backgroundColor: colors.accent},
-          headerTitleAlign: 'center',
           headerRight: () => {
             return <CustomHeaderButton />;
           },
@@ -47,6 +51,7 @@ const ShopStackNavigator = () => {
         options={({route}) => ({
           title: route.params.title,
           headerStyle: {backgroundColor: colors.accent},
+          headerTitleAlign: 'center',
         })}
       />
       <Stack.Screen name="Cart" component={CartScreen} />
@@ -56,7 +61,11 @@ const ShopStackNavigator = () => {
 
 const UserNavigator = () => {
   return (
-    <UserStack.Navigator>
+    <UserStack.Navigator
+      screenOptions={{
+        headerStyle: {backgroundColor: colors.accent},
+        headerTitleAlign: 'center',
+      }}>
       <UserStack.Screen
         name="Your Products"
         component={UserProductsScreen}
@@ -64,7 +73,6 @@ const UserNavigator = () => {
           title: 'Your Product',
           headerLeft: () => <CustomBurgerButton />,
           headerRight: () => <CustomEdditButton />,
-          headerTitleAlign: 'center',
         }}
       />
       <UserStack.Screen
@@ -73,7 +81,6 @@ const UserNavigator = () => {
         options={({route}) => {
           return {
             title: route.params ? 'Edit Product' : 'Add Product',
-            headerRight: () => <MaterialIcons name="check" size={24} />,
           };
         }}
       />
@@ -84,7 +91,11 @@ const UserNavigator = () => {
 const ShopNavigator = () => {
   return (
     <NavigationContainer>
-      <Drawer.Navigator>
+      <Drawer.Navigator
+        screenOptions={{
+          headerStyle: {backgroundColor: colors.accent},
+          headerTitleAlign: 'center',
+        }}>
         <Drawer.Screen
           name="All Products"
           component={ShopStackNavigator}
@@ -101,7 +112,7 @@ const ShopNavigator = () => {
           }}
         />
         <Drawer.Screen
-          name="User Products"
+          name="Admin"
           component={UserNavigator}
           options={{
             headerShown: false,

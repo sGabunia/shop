@@ -3,10 +3,7 @@ import {Button, Image, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import {addToCart} from '../../features/cart/cartSlice';
 
-import {
-  selectAllProducts,
-  selectProduct,
-} from '../../features/products/productsSlice';
+import {selectAllProducts} from '../../features/products/productsSlice';
 import colors from '../../constants/colors';
 
 const ProductDetailsScreen = ({route}) => {
@@ -28,7 +25,7 @@ const ProductDetailsScreen = ({route}) => {
         <Button
           onPress={handleAddToCart}
           title="ADD TO CART"
-          color={colors.primary}
+          color={colors.accent}
         />
       </View>
       <Text style={styles.price}>{product.price.toFixed(2)}</Text>
