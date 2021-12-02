@@ -2,7 +2,7 @@ import React, {useState, useLayoutEffect, useCallback} from 'react';
 import {StyleSheet, Text, View, ScrollView, TextInput} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import {
-  addProduct,
+  addNewProduct,
   selectAllProducts,
   updateProduct,
 } from '../../features/products/productsSlice';
@@ -18,19 +18,26 @@ const EditProductScreen = ({route, navigation}) => {
   const [title, setTitle] = useState(product?.title || '');
   const [imageUrl, setImageUrl] = useState(
     product?.imageUrl ||
-      'https://cdn.pixabay.com/photo/2015/10/03/02/14/pen-969298_1280.jpg',
+      'https://get.pxhere.com/photo/laptop-computer-macbook-mac-screen-water-board-keyboard-technology-air-mouse-photo-airport-aircraft-tablet-aviation-office-black-monitor-keys-graphic-hardware-image-pc-exhibition-multimedia-calculator-vector-water-cooling-floppy-disk-phased-out-desktop-computer-netbook-personal-computer-computer-monitor-electronic-device-computer-hardware-display-device-448748.jpg',
   );
   const [price, setPrice] = useState(product?.price.toString() || '');
   const [description, setDescription] = useState(product?.description || '');
 
   const handleDataSave = useCallback(
-    (title, imageUrl, price, description) => {
+    (title, imageUrl, productPrice, description) => {
+      const price = Number(productPrice);
       if (product) {
         dispatch(
-          updateProduct({id: product.id, title, imageUrl, price, description}),
+          updateProduct({
+            id: product.id,
+            title,
+            imageUrl,
+            price,
+            description,
+          }),
         );
       } else {
-        dispatch(addProduct(title, imageUrl, price, description));
+        dispatch(addNewProduct({title, imageUrl, price, description}));
       }
 
       navigation.goBack();

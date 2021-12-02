@@ -15,7 +15,7 @@ const ProductItem = ({
       <View style={styles.product}>
         <Image source={{uri: product.imageUrl}} style={styles.image} />
         <Text style={styles.title}>{product.title}</Text>
-        <Text style={styles.price}>${product.price.toFixed(2)}</Text>
+        <Text style={styles.price}>${product.price?.toFixed(2)}</Text>
         <View style={styles.actions}>
           <Button
             title={leftButtonTitle}
