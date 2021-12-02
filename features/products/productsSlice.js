@@ -1,4 +1,4 @@
-import {createSlice, createAsyncThunk, nanoid} from '@reduxjs/toolkit';
+import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 
 import PRODUCTS from '../../dummy-data';
 
@@ -33,7 +33,7 @@ export const addNewProduct = createAsyncThunk(
         },
         body: JSON.stringify({
           title,
-          ownerId: 'u2',
+          ownerId: 'u1',
           price,
           imageUrl,
           description,
