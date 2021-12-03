@@ -14,7 +14,7 @@ import colors from '../constants/colors';
 
 import CustomHeaderButton from '../components/ui/CustomHeaderButton';
 import CustomBurgerButton from '../components/ui/CustomBurgerButton';
-import CustomEdditButton from '../components/ui/CustomEdditButton';
+import CustomAddButton from '../components/ui/CustomAddButton';
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
@@ -52,6 +52,9 @@ const ShopStackNavigator = () => {
           title: route.params.title,
           headerStyle: {backgroundColor: colors.accent},
           headerTitleAlign: 'center',
+          headerRight: () => {
+            return <CustomHeaderButton />;
+          },
         })}
       />
       <Stack.Screen name="Cart" component={CartScreen} />
@@ -72,7 +75,7 @@ const UserNavigator = () => {
         options={{
           title: 'Your Product',
           headerLeft: () => <CustomBurgerButton />,
-          headerRight: () => <CustomEdditButton />,
+          headerRight: () => <CustomAddButton />,
         }}
       />
       <UserStack.Screen

@@ -1,4 +1,4 @@
-import React, {useEffect, useCallback} from 'react';
+import React, {useEffect} from 'react';
 import {
   StyleSheet,
   View,
@@ -22,31 +22,18 @@ import ProductItem from '../../components/shop/ProductItem';
 import colors from '../../constants/colors';
 
 const ProductsOverviewScreen = () => {
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
+
   const products = useSelector(selectAllProducts);
   const status = useSelector(selectProductsStatus);
   const error = useSelector(selectProductsError);
 
-  const navigation = useNavigation();
-  const dispatch = useDispatch();
-
-  const loadProducts = () => {
-    dispatch(fetchProducts());
-  };
-
   useEffect(() => {
-    console.log('effect');
-    if (status !== 'idle') {
-      loadProducts();
+    if (status === 'idle') {
+      dispatch(fetchProducts());
     }
   }, [dispatch]);
-
-  useEffect(() => {
-    navigation.addListener('focus', loadProducts);
-
-    return () => {
-      navigation.removeListener('focus', loadProducts);
-    };
-  }, [navigation]);
 
   const showProductDetails = product => {
     navigation.navigate('Product Details', {

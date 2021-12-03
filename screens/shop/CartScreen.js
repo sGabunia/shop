@@ -21,7 +21,7 @@ const CartScreen = () => {
   };
 
   const makeOrder = () => {
-    dispatch(addOrder(itemsArray, totalAmount));
+    dispatch(addOrder({items: itemsArray, total: totalAmount}));
     dispatch(clearCart());
   };
 

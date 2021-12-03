@@ -1,14 +1,19 @@
 import React, {useState, useEffect} from 'react';
 import {Button, StyleSheet, Text, View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import colors from '../../constants/colors';
 import CardItem from './CardItem';
 
-const OrderItem = ({order, orders}) => {
+const OrderItem = ({order}) => {
+  const navigation = useNavigation();
   const [isDetailsShown, setIsDetailsShown] = useState(false);
   const {items} = order;
+
   useEffect(() => {
-    setIsDetailsShown(false);
-  }, [orders]);
+    navigation.addListener('blur', () => {
+      setIsDetailsShown(false);
+    });
+  }, [navigation]);
 
   return (
     <View style={styles.orderItem}>
@@ -22,8 +27,8 @@ const OrderItem = ({order, orders}) => {
         onPress={() => setIsDetailsShown(prev => !prev)}
       />
       {isDetailsShown &&
-        items.map(([productCode, product]) => (
-          <CardItem product={product} key={productCode} />
+        items.map((product, index) => (
+          <CardItem product={product} key={index} />
         ))}
     </View>
   );
