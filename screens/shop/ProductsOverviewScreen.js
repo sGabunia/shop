@@ -74,7 +74,12 @@ const ProductsOverviewScreen = () => {
   }
   return (
     <View>
-      <FlatList data={products} renderItem={renderItem} />
+      <FlatList
+        data={products}
+        renderItem={renderItem}
+        onRefresh={() => dispatch(fetchProducts())}
+        refreshing={status === 'loading'}
+      />
     </View>
   );
 };
