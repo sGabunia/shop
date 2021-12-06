@@ -6,23 +6,31 @@ const initialState = {
   error: null,
 };
 
-export const fetchOrders = createAsyncThunk('orders/fetchOrders', async () => {
-  const response = await fetch(
-    'https://shop-f673f-default-rtdb.firebaseio.com/orders.json',
-    {
-      method: 'GET',
-    },
-  );
-  const responseData = await response.json();
-  return responseData;
-});
+export const fetchOrders = createAsyncThunk(
+  'orders/fetchOrders',
+  async (a, {getState}) => {
+    const {userId} = getState().users;
+    console.log(userId);
+    const response = await fetch(
+      `https://shop-f673f-default-rtdb.firebaseio.com/orders/${userId}.json`,
+      {
+        method: 'GET',
+      },
+    );
+    const responseData = await response.json();
+    console.log(responseData);
+    return responseData;
+  },
+);
 
 export const addOrder = createAsyncThunk(
   'orders/addOrder',
-  async ({items, total}) => {
+  async ({items, total}, {getState}) => {
+    const {userId, token} = getState().users;
+
     const itemsList = items.map(([id, item]) => item);
     const response = await fetch(
-      'https://shop-f673f-default-rtdb.firebaseio.com/orders.json',
+      `https://shop-f673f-default-rtdb.firebaseio.com/orders/${userId}.json?auth=${token}`,
       {
         method: 'POST',
         headers: {
@@ -43,6 +51,7 @@ export const addOrder = createAsyncThunk(
     );
 
     const {name} = await response.json();
+    console.log(name);
 
     return {
       id: name,
@@ -71,6 +80,11 @@ const orderSlice = createSlice({
         state.status = 'loading';
       })
       .addCase(fetchOrders.fulfilled, (state, action) => {
+        if (action.payload === null) {
+          state.orders = [];
+          state.status = 'succeeded';
+          return;
+        }
         const newArr = Object.entries(action.payload).map(([id, order]) => ({
           id,
           ...order,

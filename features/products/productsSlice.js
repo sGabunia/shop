@@ -23,9 +23,10 @@ export const fetchProducts = createAsyncThunk(
 
 export const addNewProduct = createAsyncThunk(
   'products/addNewProduct',
-  async ({title, imageUrl, price, description}) => {
+  async ({title, imageUrl, price, description}, {getState}) => {
+    const {token, userId} = getState().users;
     const response = await fetch(
-      'https://shop-f673f-default-rtdb.firebaseio.com/products.json',
+      `https://shop-f673f-default-rtdb.firebaseio.com/products.json?auth=${token}`,
       {
         method: 'POST',
         headers: {
@@ -33,7 +34,7 @@ export const addNewProduct = createAsyncThunk(
         },
         body: JSON.stringify({
           title,
-          ownerId: 'u1',
+          ownerId: userId,
           price,
           imageUrl,
           description,
@@ -43,7 +44,7 @@ export const addNewProduct = createAsyncThunk(
     const {name} = await response.json();
     return {
       id: name,
-      ownerId: 'u1',
+      ownerId: userId,
       title,
       price,
       imageUrl,
@@ -54,9 +55,10 @@ export const addNewProduct = createAsyncThunk(
 
 export const updateProduct = createAsyncThunk(
   'products/updateProduct',
-  async ({id, title, imageUrl, price, description}) => {
-    await fetch(
-      `https://shop-f673f-default-rtdb.firebaseio.com/products/${id}.json`,
+  async ({id, title, imageUrl, price, description}, {getState}) => {
+    const {token} = getState().users;
+    const response = await fetch(
+      `https://shop-f673f-default-rtdb.firebaseio.com/products/${id}.json?auth=${token}`,
       {
         method: 'PATCH',
         headers: {
@@ -71,21 +73,25 @@ export const updateProduct = createAsyncThunk(
       },
     );
 
+    const {error} = await response.json();
+
     return {
       id,
       title,
       imageUrl,
       price,
       description,
+      error,
     };
   },
 );
 
 export const deleteProduct = createAsyncThunk(
   'products/deteleProduct',
-  async id => {
+  async (id, {getState}) => {
+    const {token} = getState().users;
     await fetch(
-      `https://shop-f673f-default-rtdb.firebaseio.com/products/${id}.json`,
+      `https://shop-f673f-default-rtdb.firebaseio.com/products/${id}.json?auth=${token}`,
       {
         method: 'DELETE',
       },
@@ -97,6 +103,11 @@ export const deleteProduct = createAsyncThunk(
 const productsSlice = createSlice({
   name: 'products',
   initialState,
+  reducers: {
+    updateError: state => {
+      state.error = null;
+    },
+  },
   extraReducers: builder => {
     builder
       .addCase(addNewProduct.fulfilled, (state, action) => {
@@ -120,7 +131,12 @@ const productsSlice = createSlice({
         state.error = action.error.message;
       })
       .addCase(updateProduct.fulfilled, (state, action) => {
-        const {id, title, imageUrl, price, description} = action.payload;
+        const {id, title, imageUrl, price, description, error} = action.payload;
+
+        if (error) {
+          state.error = error;
+          return;
+        }
 
         const oldProduct = state.availableProducts.find(
           product => product.id === id,
@@ -154,6 +170,8 @@ const productsSlice = createSlice({
       });
   },
 });
+
+export const {updateError} = productsSlice.actions;
 
 export const selectAllProducts = ({products}) => products.availableProducts;
 export const selectUserProducts = ({products}) => products.userProducts;

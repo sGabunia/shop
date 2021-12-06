@@ -3,6 +3,9 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 
+import {useSelector} from 'react-redux';
+import {selectIsSignedIn} from '../features/user/authSlice';
+
 import ProductsOverviewScreen from '../screens/shop/ProductsOverviewScreen';
 import ProductDetailsScreen from '../screens/shop/ProductDetailsScreen';
 import CartScreen from '../screens/shop/CartScreen';
@@ -17,12 +20,15 @@ import CustomBurgerButton from '../components/ui/CustomBurgerButton';
 import CustomAddButton from '../components/ui/CustomAddButton';
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import AuthScreen from '../screens/user/AuthScreen';
+import CreateAccountScreen from '../screens/user/CreateAccountScreen';
 
 const Stack = createNativeStackNavigator();
 const UserStack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
 const ShopStackNavigator = () => {
+  const isSignedIn = useSelector(selectIsSignedIn);
   return (
     <Stack.Navigator
       screenOptions={{
@@ -32,32 +38,41 @@ const ShopStackNavigator = () => {
         headerStyle: {backgroundColor: colors.accent},
         headerTitleAlign: 'center',
       }}>
-      <Stack.Screen
-        name="Products"
-        component={ProductsOverviewScreen}
-        options={{
-          title: 'All Products',
-          headerRight: () => {
-            return <CustomHeaderButton />;
-          },
-          headerLeft: () => {
-            return <CustomBurgerButton />;
-          },
-        }}
-      />
-      <Stack.Screen
-        name="Product Details"
-        component={ProductDetailsScreen}
-        options={({route}) => ({
-          title: route.params.title,
-          headerStyle: {backgroundColor: colors.accent},
-          headerTitleAlign: 'center',
-          headerRight: () => {
-            return <CustomHeaderButton />;
-          },
-        })}
-      />
-      <Stack.Screen name="Cart" component={CartScreen} />
+      {isSignedIn ? (
+        <>
+          <Stack.Screen
+            name="Products"
+            component={ProductsOverviewScreen}
+            options={{
+              title: 'All Products',
+              headerRight: () => {
+                return <CustomHeaderButton />;
+              },
+              headerLeft: () => {
+                return <CustomBurgerButton />;
+              },
+            }}
+          />
+          <Stack.Screen
+            name="Product Details"
+            component={ProductDetailsScreen}
+            options={({route}) => ({
+              title: route.params.title,
+              headerStyle: {backgroundColor: colors.accent},
+              headerTitleAlign: 'center',
+              headerRight: () => {
+                return <CustomHeaderButton />;
+              },
+            })}
+          />
+          <Stack.Screen name="Cart" component={CartScreen} />
+        </>
+      ) : (
+        <>
+          <Stack.Screen name="Sign In" component={AuthScreen} />
+          <Stack.Screen name="Create Account" component={CreateAccountScreen} />
+        </>
+      )}
     </Stack.Navigator>
   );
 };
